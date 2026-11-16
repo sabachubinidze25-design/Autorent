@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}რეგისტრაცია &middot; AutoRent{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <form method="post" novalidate class="auth-form">
+    {% csrf_token %}
+    <h1>რეგისტრაცია</h1>
+    <label class="field">სახელი
+      <input type="text" name="first_name" value="{{ values|get_item:'first_name' }}" required autofocus>
+    </label>
+    <label class="field">გვარი
+      <input type="text" name="last_name" value="{{ values|get_item:'last_name' }}" required>
+    </label>
+    <label class="field">ტელეფონის ნომერი
+      <input type="tel" name="phone" value="{{ values|get_item:'phone' }}" required>
+    </label>
+    <label class="field">ელფოსტა
+      <input type="email" name="email" value="{{ values|get_item:'email' }}" required>
+    </label>
+    <label class="field">პაროლი
+      <input type="password" name="password" minlength="6" autocomplete="new-password" required>
+    </label>
+    <button class="btn btn-primary btn-block btn-lg" type="submit">რეგისტრაცია <span class="arrow">&rarr;</span></button>
+    <p class="form-foot">უკვე გაქვთ ანგარიში? <a href="{% url 'login' %}">ავტორიზაცია</a></p>
+  </form>
+  <div class="auth-art">{% include "_art_car.html" %}</div>
+</section>
+{% endblock %}

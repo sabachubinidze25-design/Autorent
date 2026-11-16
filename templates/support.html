@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}დახმარება &middot; AutoRent{% endblock %}
+{% block content %}
+<h2 class="section-title">დახმარება და კონტაქტი</h2>
+
+<div class="support-layout">
+  <section>
+    <h3 class="sub-title">ხშირად დასმული კითხვები</h3>
+    <div class="faq">
+      <details>
+        <summary>როგორ ვიქირაო მანქანა?</summary>
+        <p>გაიარეთ ავტორიზაცია, აირჩიეთ მანქანა, მიუთითეთ რამდენი დღით გსურთ ქირაობა და დააჭირეთ ღილაკს „ქირაობა“. ნაქირავები მანქანა გამოჩნდება თქვენს პროფილზე.</p>
+      </details>
+      <details>
+        <summary>როგორ დავამატო ჩემი მანქანა გასაქირავებლად?</summary>
+        <p>ავტორიზაციის შემდეგ ზედა მენიუში დააჭირეთ „+“ ღილაკს, შეავსეთ მონაცემები და ატვირთეთ 3 ფოტო (.png, .jpg ან .jpeg). თქვენი ტელეფონის ნომერი განცხადებას ავტომატურად დაემატება.</p>
+      </details>
+      <details>
+        <summary>როგორ გავიგებ, რომ ჩემი მანქანა იქირავეს?</summary>
+        <p>ზარის ხატულაზე („შეტყობინებები“) გამოჩნდება მესიჯი, როდესაც ვინმე თქვენს მანქანას იქირავებს.</p>
+      </details>
+      <details>
+        <summary>როგორ მუშაობს ფილტრი?</summary>
+        <p>მანქანების გვერდზე შეგიძლიათ აირჩიოთ ქალაქი, გამოშვების წლების შუალედი და ტევადობა. ფილტრები ერთად და ცალ-ცალკეც მუშაობს.</p>
+      </details>
+      <details>
+        <summary>სად ვნახო მოწონებული მანქანები?</summary>
+        <p>მანქანის ბარათზე გულის ხატულაზე დაჭერით მანქანა დაემატება მოწონებულებში. სია ჩანს თქვენს პროფილზე. მოწონებულიდან ამოშლა ამჟამად შეუძლებელია.</p>
+      </details>
+      <details>
+        <summary>დამავიწყდა პაროლი</summary>
+        <p>პაროლის აღდგენა ამჟამად ავტომატურად ვერ ხერხდება. მოგვწერეთ ფორმით და მიუთითეთ თქვენი ტელეფონის ნომერი.</p>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="card contact-card">
+      <h3 class="sub-title">დაგვიკავშირდით</h3>
+      <p class="muted">ვერ იპოვეთ პასუხი? მოგვწერეთ და ელფოსტით გიპასუხებთ.</p>
+      <p class="contact-line">ელფოსტა: <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+      {% if support_phone %}<p class="contact-line">ტელეფონი: <a href="tel:{{ support_phone }}">{{ support_phone }}</a></p>{% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <label class="field">სახელი
+          <input type="text" name="name" value="{{ values.name }}" maxlength="80" required>
+        </label>
+        <label class="field">თქვენი ელფოსტა
+          <input type="email" name="email" value="{{ values.email }}" maxlength="120" required>
+        </label>
+        <label class="field">შეტყობინება
+          <textarea name="message" rows="6" maxlength="2000" required>{{ values.message }}</textarea>
+        </label>
+        <div class="hp" aria-hidden="true">
+          <label>არ შეავსოთ <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">გაგზავნა</button>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

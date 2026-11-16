@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}ჩემი პროფილი &middot; AutoRent{% endblock %}
+{% block content %}
+<section class="profile-head">
+  <div class="avatar" aria-hidden="true">{{ current_user.initials }}</div>
+  <div class="grow">
+    <h1>{{ current_user.get_full_name }}</h1>
+    <p class="muted">{{ current_user.phone }} &middot; {{ current_user.email }}</p>
+  </div>
+  <a class="btn btn-ghost" href="{% url 'profile_edit' %}">მონაცემების შეცვლა</a>
+</section>
+
+<section>
+  <h2 class="section-title">ნაქირავები მანქანები</h2>
+  {% if rentals %}
+    <div class="grid">
+      {% for r in rentals %}
+        <article class="rent-card phase-{{ r.phase }}">
+          <div class="card-head">
+            <h3><a href="{% url 'car_detail' r.car_id %}">{{ r.car.brand }} {{ r.car.model }}</a></h3>
+            <span class="badge status-{{ r.phase }}">{{ r.phase_label }}</span>
+          </div>
+          <dl class="kv">
+            <dt>ქალაქი:</dt><dd>{{ r.car.city }}</dd>
+            <dt>პერიოდი:</dt><dd>{{ r.start_date|date:"d.m.Y" }} – {{ r.end_date|date:"d.m.Y" }}</dd>
+            <dt>დღეები:</dt><dd>{{ r.days }} დღე</dd>
+            <dt>გადასახდელი:</dt><dd>{{ r.total_price|money }} ლარი</dd>
+          </dl>
+          <div class="rent-actions">
+            <a class="btn btn-ghost btn-sm" href="{% url 'rent_success' r.pk %}">დადასტურება</a>
+            {% if r.can_cancel %}
+              <form method="post" action="{% url 'rental_cancel' r.pk %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'profile' %}">
+                <button class="btn btn-danger btn-sm" type="submit">ქირაობის გაუქმება</button>
+              </form>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty">ჯერ არცერთი მანქანა არ გიქირავებიათ.</p>
+  {% endif %}
+</section>
+
+<section>
+  <div class="section-head">
+    <h2 class="section-title">თქვენი განცხადებები</h2>
+    <a href="{% url 'add_car' %}">+ მანქანის დამატება</a>
+  </div>
+  {% if mine %}
+    <div class="grid">{% for car in mine %}{% include "_car_card.html" %}{% endfor %}</div>
+  {% else %}
+    <p class="empty">ჯერ არცერთი მანქანა არ გაქვთ განთავსებული.</p>
+  {% endif %}
+</section>
+
+<section>
+  <h2 class="section-title">თქვენს მიერ მოწონებული მანქანები</h2>
+  {% if liked %}
+    <div class="grid">{% for car in liked %}{% include "_car_card.html" %}{% endfor %}</div>
+  {% else %}
+    <p class="empty">მოწონებული მანქანები ჯერ არ გაქვთ.</p>
+  {% endif %}
+</section>
+{% endblock %}

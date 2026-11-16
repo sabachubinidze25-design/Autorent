@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}ავტორიზაცია &middot; AutoRent{% endblock %}
+{% block guest_action %}<a class="btn btn-primary" href="{% url 'register' %}">რეგისტრაცია</a>{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <form method="post" novalidate class="auth-form">
+    {% csrf_token %}
+    <h1>ავტორიზაცია</h1>
+    <input type="hidden" name="next" value="{{ next }}">
+    <label class="field">ტელეფონის ნომერი
+      <input type="tel" name="phone" value="{{ phone }}" autocomplete="tel" required autofocus>
+    </label>
+    <label class="field">პაროლი
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <button class="btn btn-primary btn-block btn-lg" type="submit">შესვლა <span class="arrow">&rarr;</span></button>
+    <p class="form-foot">ახალი ხართ? <a href="{% url 'register' %}">რეგისტრაცია</a></p>
+  </form>
+  <div class="auth-art">{% include "_art_car.html" %}</div>
+</section>
+{% endblock %}

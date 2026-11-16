@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}მონაცემების შეცვლა &middot; AutoRent{% endblock %}
+{% block content %}
+<a class="back" href="{% url 'profile' %}">&larr; პროფილი</a>
+<div class="edit-grid">
+  <form method="post" class="form-card" novalidate>
+    {% csrf_token %}
+    <h2 class="section-title">პირადი მონაცემები</h2>
+    <div class="row">
+      <label class="field">სახელი
+        <input type="text" name="first_name" value="{{ profile_form.first_name.value|default_if_none:'' }}" required>
+      </label>
+      <label class="field">გვარი
+        <input type="text" name="last_name" value="{{ profile_form.last_name.value|default_if_none:'' }}" required>
+      </label>
+    </div>
+    <label class="field">ელფოსტა
+      <input type="email" name="email" value="{{ profile_form.email.value|default_if_none:'' }}" required>
+    </label>
+    <label class="field">ტელეფონის ნომერი (ავტორიზაციისთვის)
+      <input type="tel" name="phone" value="{{ profile_form.phone.value|default_if_none:'' }}" required>
+    </label>
+    <button class="btn btn-primary btn-block" type="submit">შენახვა</button>
+  </form>
+
+  <form method="post" class="form-card" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="password">
+    <h2 class="section-title">პაროლის შეცვლა</h2>
+    <label class="field">მიმდინარე პაროლი
+      <input type="password" name="current_password" autocomplete="current-password" required>
+    </label>
+    <label class="field">ახალი პაროლი (მინიმუმ 6 სიმბოლო)
+      <input type="password" name="new_password" minlength="6" autocomplete="new-password" required>
+    </label>
+    <button class="btn btn-primary btn-block" type="submit">პაროლის შეცვლა</button>
+  </form>
+</div>
+{% endblock %}

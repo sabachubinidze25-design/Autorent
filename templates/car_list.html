@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}მანქანები &middot; AutoRent{% endblock %}
+{% block content %}
+<h2 class="section-title">მანქანების გაქირავება</h2>
+
+<form method="get" class="filter-bar">
+  <label class="field">ბრენდი
+    <select name="brand">
+      <option value="">ყველა ბრენდი</option>
+      {% for b in brands %}
+        <option value="{{ b }}" {% if b == filters.brand %}selected{% endif %}>{{ b }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label class="field">ძებნა მოდელით
+    <input type="search" name="q" maxlength="60" placeholder="Camry, E320..." value="{{ filters.q }}">
+  </label>
+  <label class="field">ქალაქი
+    <select name="city">
+      <option value="">ყველა ქალაქი</option>
+      {% for c in cities %}
+        <option value="{{ c }}" {% if c == filters.city %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label class="field">დალაგება
+    <select name="sort">
+      {% for key, label in sort_options %}
+        <option value="{{ key }}" {% if key == filters.sort %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label class="field">ტევადობა (კაცი)
+    <input type="number" name="capacity" min="1" max="60" placeholder="6" value="{{ filters.capacity }}">
+  </label>
+  <label class="field">გამოშვების წელი (დან)
+    <input type="number" name="start_year" min="1950" max="2100" placeholder="1995" value="{{ filters.start_year }}">
+  </label>
+  <label class="field">გამოშვების წელი (მდე)
+    <input type="number" name="end_year" min="1950" max="2100" placeholder="2005" value="{{ filters.end_year }}">
+  </label>
+  <label class="field">ფასი დღეში (დან), ₾
+    <input type="number" name="min_price" min="0" step="any" placeholder="50" value="{{ filters.min_price }}">
+  </label>
+  <label class="field">ფასი დღეში (მდე), ₾
+    <input type="number" name="max_price" min="0" step="any" placeholder="200" value="{{ filters.max_price }}">
+  </label>
+  <div class="filter-actions">
+    <button class="btn btn-primary" type="submit">გაფილტვრა</button>
+    {% if has_filter %}<a class="btn btn-ghost" href="{% url 'cars' %}">გასუფთავება</a>{% endif %}
+  </div>
+</form>
+
+{% if page.object_list %}
+  <p class="count">ნაპოვნია მანქანა: {{ page.paginator.count }}{% if page.paginator.num_pages > 1 %} &middot; ნაჩვენებია {{ page.start_index }}–{{ page.end_index }}{% endif %}</p>
+  <div class="grid">{% for car in cars %}{% include "_car_card.html" %}{% endfor %}</div>
+  {% include "_pager.html" %}
+{% else %}
+  <p class="empty">ამ პარამეტრებით მანქანა ვერ მოიძებნა.</p>
+{% endif %}
+{% endblock %}

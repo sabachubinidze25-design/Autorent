@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}მანქანის დამატება &middot; AutoRent{% endblock %}
+{% block content %}
+<section class="form-card wide">
+  <h2 class="section-title">მანქანის დამატება გასაქირავებლად</h2>
+  <p class="muted">თქვენი ტელეფონის ნომერი ({{ current_user.phone }}) განცხადებას ავტომატურად დაემატება.</p>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="row">
+      <label class="field">ბრენდი
+        <select name="brand" required>
+          <option value="">აირჩიეთ&hellip;</option>
+          {% for b in brands %}
+          <option value="{{ b }}" {% if values|get_item:'brand' == b %}selected{% endif %}>{{ b }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="field">მოდელი
+        <input type="text" name="model" placeholder="E320" value="{{ values|get_item:'model' }}" required>
+      </label>
+    </div>
+    <div class="row">
+      <label class="field">გამოშვების წელი
+        <input type="number" name="year" min="1950" max="2100" placeholder="2015" value="{{ values|get_item:'year' }}" required>
+      </label>
+      <label class="field">გაქირავების ფასი დღეში (₾)
+        <input type="number" name="price" min="1" step="any" placeholder="90" value="{{ values|get_item:'price' }}" required>
+      </label>
+    </div>
+    <div class="row">
+      <label class="field">ტევადობა (კაცი)
+        <input type="number" name="capacity" min="1" max="60" placeholder="4" value="{{ values|get_item:'capacity' }}" required>
+      </label>
+      <label class="field">ბენზინის ბაკის მოცულობა (ლიტრი)
+        <input type="number" name="fuel_capacity" min="1" step="any" placeholder="90" value="{{ values|get_item:'fuel_capacity' }}" required>
+      </label>
+    </div>
+    <div class="row">
+      <label class="field">ტრანსმისია
+        <select name="transmission" required>
+          <option value="">აირჩიეთ&hellip;</option>
+          {% for t in transmissions %}
+            <option value="{{ t }}" {% if values|get_item:'transmission' == t %}selected{% endif %}>{{ t }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="field">ქალაქი
+        <select name="city" required>
+          <option value="">აირჩიეთ&hellip;</option>
+          {% for c in cities %}
+          <option value="{{ c }}" {% if values|get_item:'city' == c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <fieldset>
+      <legend>ფოტოები (სავალდებულოა 3 ცალი &middot; .png, .jpg, .jpeg, .jfif)</legend>
+      <div class="row three">
+        <label class="field">ფოტო 1 <input type="file" name="image1" accept="image/png,image/jpeg,.png,.jpg,.jpeg,.jfif" required></label>
+        <label class="field">ფოტო 2 <input type="file" name="image2" accept="image/png,image/jpeg,.png,.jpg,.jpeg,.jfif" required></label>
+        <label class="field">ფოტო 3 <input type="file" name="image3" accept="image/png,image/jpeg,.png,.jpg,.jpeg,.jfif" required></label>
+      </div>
+    </fieldset>
+
+
+    <button class="btn btn-primary btn-block btn-lg" type="submit">განცხადების გამოქვეყნება</button>
+  </form>
+</section>
+{% endblock %}

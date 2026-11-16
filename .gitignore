@@ -1,0 +1,18 @@
+# Python / virtual environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Local data - every computer creates its own
+db.sqlite3
+media/
+
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env

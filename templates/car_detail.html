@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}{{ car.brand }} {{ car.model }} &middot; AutoRent{% endblock %}
+{% block content %}
+<a class="back" href="{% url 'cars' %}">&larr; ყველა მანქანა</a>
+
+<div class="detail-top">
+  <div class="detail-left">
+    {# Photo gallery: the radio buttons + labels switch the big photo with CSS only. #}
+    <div class="gallery">
+      {% for photo in photos %}
+        <input type="radio" name="gallery" id="g{{ forloop.counter }}" {% if forloop.first %}checked{% endif %} aria-label="ფოტო {{ forloop.counter }}">
+      {% endfor %}
+      <div class="gallery-main">
+        {% for photo in photos %}
+          <img class="gimg gimg-{{ forloop.counter }}" src="{{ photo.url }}" alt="{{ car.brand }} {{ car.model }} — ფოტო {{ forloop.counter }}">
+        {% empty %}
+          <div class="no-photo">ფოტო არ არის</div>
+        {% endfor %}
+      </div>
+      {% if photos|length > 1 %}
+        <div class="gallery-thumbs">
+          {% for photo in photos %}
+            <label for="g{{ forloop.counter }}" title="დიდად ნახვა"><img src="{{ photo.url }}" alt="მინიატურა {{ forloop.counter }}"></label>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <section class="card price-card">
+      <h2>ფასები დღეების მიხედვით</h2>
+      <table class="price-table">
+        <thead><tr><th>დღეები</th><th>ჯამური ფასი</th></tr></thead>
+        <tbody>
+          {% for row in price_table %}
+            <tr><td>{{ row.days }} დღე</td><td><strong>{{ row.total }} ₾</strong></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <aside class="spec-panel">
+    <p class="spec-brand">{{ car.brand }}</p>
+    <h1>{{ car.model }}</h1>
+
+    <div class="spec-row"><span>გამოშვების წელი</span><strong>{{ car.year }}</strong></div>
+    <div class="spec-row"><span>საწვავის ავზის მოცულობა</span><strong>{{ car.fuel_capacity|money }} ლიტრი</strong></div>
+    <div class="spec-row"><span>ტრანსმისია</span><strong>{{ car.transmission }}</strong></div>
+    <div class="spec-row"><span>ტევადობა</span><strong>{{ car.capacity }} კაცი</strong></div>
+    <div class="spec-row"><span>ქალაქი</span><strong>{{ car.city }}</strong></div>
+    <div class="spec-row"><span>განათავსა</span><strong>{{ car.owner.get_full_name }}</strong></div>
+
+    {% if is_owner %}
+      <p class="muted own-note">ეს თქვენი განცხადებაა.</p>
+    {% else %}
+      <form method="post" class="rent-form">
+        {% csrf_token %}
+        <div class="row">
+          <label class="field">დაწყება
+            <input type="date" name="start_date" min="{{ today }}" value="{{ rent_values|get_item:'start_date' }}" required>
+          </label>
+          <label class="field">დასრულება
+            <input type="date" name="end_date" min="{{ today }}" value="{{ rent_values|get_item:'end_date' }}" required>
+          </label>
+        </div>
+        <p class="muted small">ორივე დღე ითვლება ქირაობაში. გაუქმება შესაძლებელია დაწყებამდე.</p>
+        <div class="rent-row">
+          <p class="price">ფასი დღეში: <strong>{{ car.price|money }} ₾</strong></p>
+          <button class="btn btn-primary" type="submit">ქირაობა</button>
+        </div>
+      </form>
+
+      {% if booked %}
+        <div class="booked">
+          <p class="booked-title">დაკავებული პერიოდები:</p>
+          <ul>{% for r in booked %}<li>{{ r.start_date|date:"d.m.Y" }} – {{ r.end_date|date:"d.m.Y" }}</li>{% endfor %}</ul>
+        </div>
+      {% endif %}
+
+      <p class="owner-phone">მფლობელის ტელეფონი: <strong>{{ owner_phone }}</strong></p>
+
+      <form method="post" action="{% url 'like_car' car.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if is_liked %}
+          <button class="btn btn-ghost btn-block liked-btn" type="submit">&#9829; მოწონებულია &middot; ამოღება</button>
+        {% else %}
+          <button class="btn btn-ghost btn-block" type="submit">&#9825; მოწონებულებში დამატება</button>
+        {% endif %}
+      </form>
+    {% endif %}
+    {% if not current_user %}<p class="muted">ქირაობისთვის საჭიროა ავტორიზაცია.</p>{% endif %}
+  </aside>
+</div>
+
+{% if similar %}
+  <section>
+    <h2 class="section-title">მსგავსი მანქანები</h2>
+    <div class="grid">{% for car in similar %}{% include "_car_card.html" %}{% endfor %}</div>
+  </section>
+{% endif %}
+
+
+{% endblock %}

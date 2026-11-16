@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}ქირაობა &middot; AutoRent{% endblock %}
+{% block content %}
+<section class="success-page">
+  {% if rental.status == 'active' %}
+    <div class="auth-art no-print">{% include "_art_car.html" %}</div>
+    <h1 class="no-print">გმადლობთ რომ გვენდობით</h1>
+    <p class="lead no-print">თქვენ წარმატებით დაჯავშნეთ მანქანა</p>
+  {% else %}
+    <h1 class="no-print">ქირაობა გაუქმებულია</h1>
+  {% endif %}
+
+  <article class="receipt">
+    <h2>ქირაობის დადასტურება {% if rental.status != 'active' %}<span class="badge status-cancelled">გაუქმებულია</span>{% endif %}</h2>
+    <p class="when">№ {{ rental.pk }} &middot; {{ rental.created_at|date:"d.m.Y H:i" }} &middot; AutoRent</p>
+    <dl class="kv">
+      <dt>მანქანა</dt><dd>{{ car.brand }} {{ car.model }}</dd>
+      <dt>ქალაქი</dt><dd>{{ car.city }}</dd>
+      <dt>დაწყება</dt><dd>{{ rental.start_date|date:"d.m.Y" }}</dd>
+      <dt>დასრულება</dt><dd>{{ rental.end_date|date:"d.m.Y" }}</dd>
+      <dt>დღეების რაოდენობა</dt><dd>{{ rental.days }}</dd>
+      <dt>ფასი დღეში</dt><dd>{{ rental.price_per_day|money }} ₾</dd>
+      <dt>მქირავებელი</dt><dd>{{ rental.user.get_full_name }}</dd>
+      <dt>მქირავებლის ტელეფონი</dt><dd>{{ rental.user.phone }}</dd>
+      <dt>მანქანის მფლობელი</dt><dd>{{ car.owner.get_full_name }} ({{ car.owner.phone }})</dd>
+    </dl>
+    <p class="receipt-total"><span>ჯამი</span> <strong>{{ rental.total_price|money }} ₾</strong></p>
+  </article>
+
+  <div class="success-actions no-print">
+    <a class="btn btn-primary btn-lg" href="{% url 'profile' %}">პროფილზე გადასვლა</a>
+    {% if rental.can_cancel %}
+      <form method="post" action="{% url 'rental_cancel' rental.pk %}" class="inline">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'profile' %}">
+        <button class="btn btn-danger btn-lg" type="submit">ქირაობის გაუქმება</button>
+      </form>
+    {% endif %}
+  </div>
+  {% if rental.can_cancel %}<p class="muted no-print">ქირაობის გაუქმება შესაძლებელია {{ rental.start_date|date:"d.m.Y" }}-მდე.</p>{% endif %}
+</section>
+{% endblock %}

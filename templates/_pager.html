@@ -1,0 +1,23 @@
+{% if page.paginator.num_pages > 1 %}
+<nav class="pager" aria-label="გვერდები">
+  {% if page.has_previous %}
+    <a class="pg pg-nav" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.previous_page_number }}" rel="prev">&laquo; წინა</a>
+  {% else %}
+    <span class="pg pg-nav disabled">&laquo; წინა</span>
+  {% endif %}
+  {% for n in page_links %}
+    {% if n is None %}
+      <span class="pg gap">&hellip;</span>
+    {% elif n == page.number %}
+      <span class="pg current" aria-current="page">{{ n }}</span>
+    {% else %}
+      <a class="pg" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ n }}">{{ n }}</a>
+    {% endif %}
+  {% endfor %}
+  {% if page.has_next %}
+    <a class="pg pg-nav" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.next_page_number }}" rel="next">შემდეგი &raquo;</a>
+  {% else %}
+    <span class="pg pg-nav disabled">შემდეგი &raquo;</span>
+  {% endif %}
+</nav>
+{% endif %}

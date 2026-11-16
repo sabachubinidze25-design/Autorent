@@ -1,0 +1,31 @@
+{% load portal_tags %}
+<article class="car-card">
+  <div class="card-head">
+    <h3><a href="{% url 'car_detail' car.id %}">{{ car.brand }}</a></h3>
+    {# The heart is a tiny form: one click likes the car, a second click removes the like. #}
+    <form method="post" action="{% url 'like_car' car.id %}" class="inline">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      {% if car.id in liked_ids %}
+        <button class="heart liked" type="submit" title="მოწონებულებიდან ამოღება" aria-label="მოწონებულებიდან ამოღება" aria-pressed="true">
+      {% else %}
+        <button class="heart" type="submit" title="მოწონებულებში დამატება" aria-label="მოწონებულებში დამატება" aria-pressed="false">
+      {% endif %}
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </form>
+  </div>
+  <p class="sub">{{ car.model }}/{{ car.year }} წლის</p>
+  <a href="{% url 'car_detail' car.id %}" class="car-photo">
+    {% if car.image1 %}
+      <img src="{{ car.image1.url }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+    {% else %}
+      <div class="no-photo">ფოტო არ არის</div>
+    {% endif %}
+  </a>
+  <p class="meta">{{ car.city }} &middot; {{ car.capacity }} კაცი &middot; {{ car.transmission }}</p>
+  <div class="card-foot">
+    <p class="price"><strong>{{ car.price|money }} ₾</strong> / დღე</p>
+    <a class="btn btn-primary btn-sm" href="{% url 'car_detail' car.id %}">ქირაობა</a>
+  </div>
+</article>

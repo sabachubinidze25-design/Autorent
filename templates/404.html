@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}გვერდი ვერ მოიძებნა &middot; AutoRent{% endblock %}
+{% block content %}
+<section class="success-page not-found">
+  <p class="big-404">404</p>
+  <div class="auth-art">{% include "_art_suv.html" %}</div>
+  <h1>გვერდი ვერ მოიძებნა</h1>
+  <p class="lead">მანქანა სხვა გზით წავიდა. ეს მისამართი არ არსებობს ან გადატანილია.</p>
+  <div class="success-actions">
+    <a class="btn btn-primary btn-lg" href="{% url 'home' %}">მთავარ გვერდზე</a>
+    <a class="btn btn-ghost btn-lg" href="{% url 'cars' %}">მანქანების ნახვა</a>
+  </div>
+</section>
+{% endblock %}

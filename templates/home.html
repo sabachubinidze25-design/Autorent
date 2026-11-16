@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}AutoRent &middot; ავტომობილების გაქირავება{% endblock %}
+{% block content %}
+<section class="banners">
+  <div class="banner banner-light">
+    <h1>საუკეთესო პლატფორმა<br><span>მანქანის საქირავებლად.</span></h1>
+    <p>მანქანის ქირაობა ასეთი ადვილი არასდროს ყოფილა.</p>
+    <a class="btn btn-white" href="{% url 'cars' %}">იქირავე</a>
+    {% include "_art_car.html" %}
+  </div>
+  <div class="banner banner-dark banner-suv">
+    <h1>მანქანის ქირაობა<br><span>ასეთი ადვილი არასდროს ყოფილა</span></h1>
+    <p>იქირავე მანქანა სასურველ ფასში სასურველი დროით.</p>
+    <ul class="chips">
+      <li>ფილტრი ქალაქის მიხედვით</li>
+      <li>ფასი დღეების მიხედვით</li>
+    </ul>
+    <a class="btn btn-outline-white" href="{% url 'cars' %}">იქირავე</a>
+    {% include "_art_suv.html" %}
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">პოპულარული მანქანები</h2>
+  {% if popular %}
+    <div class="grid">{% for car in popular %}{% include "_car_card.html" %}{% endfor %}</div>
+  {% else %}
+    <p class="empty">ამჟამად მანქანები ვერ მოიძებნა.</p>
+  {% endif %}
+</section>
+
+<section>
+  <div class="section-head">
+    <h2 class="section-title">სხვა მანქანები</h2>
+    <a href="{% url 'cars' %}">ყველას ნახვა და გაფილტვრა &rarr;</a>
+  </div>
+  {% if random %}
+    <div class="grid">{% for car in random %}{% include "_car_card.html" %}{% endfor %}</div>
+  {% else %}
+    <p class="empty">ამჟამად მანქანები ვერ მოიძებნა.</p>
+  {% endif %}
+</section>
+{% endblock %}

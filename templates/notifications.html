@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}შეტყობინებები &middot; AutoRent{% endblock %}
+{% block content %}
+<h2 class="section-title">შეტყობინებები</h2>
+{% if items %}
+  <ul class="notes">
+    {% for n in items %}
+      <li class="card note{% if not n.is_read %} unread{% endif %}">
+        <span>{{ n.text }}</span>
+        <time class="muted small" datetime="{{ n.created_at|date:'c' }}">{{ n.created_at|date:"d.m.Y H:i" }}</time>
+      </li>
+    {% endfor %}
+  </ul>
+  {% include "_pager.html" %}
+{% else %}
+  <p class="empty">შეტყობინებები ჯერ არ არის. აქ გამოჩნდება მესიჯი, როდესაც ვინმე თქვენს მანქანას იქირავებს.</p>
+{% endif %}
+{% endblock %}
